@@ -1,9 +1,9 @@
-﻿namespace Gdax.Models
+﻿namespace Gdax.Time
 {
     using Newtonsoft.Json;
     using System;
 
-    public class Time
+    public class ServerTime
     {
         [JsonProperty("iso")]
         public DateTime Iso { get; set; }

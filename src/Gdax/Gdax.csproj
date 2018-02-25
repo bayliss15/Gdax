@@ -8,4 +8,16 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Accounts\" />
+    <Folder Include="Fills\" />
+    <Folder Include="Deposits\" />
+    <Folder Include="CoinbaseAccounts\" />
+    <Folder Include="UserAccount\" />
+    <Folder Include="Reports\" />
+    <Folder Include="PaymentMethods\" />
+    <Folder Include="Withdrawals\" />
+    <Folder Include="Orders\" />
+  </ItemGroup>
+
 </Project>

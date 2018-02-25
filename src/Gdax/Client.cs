@@ -11,6 +11,9 @@
     {
         #region Fields
 
+        public const string RestApiLive = "https://api.gdax.com/";
+        public const string RestApiSandbox = "https://api-public.sandbox.gdax.com/";
+
         private HttpClient httpClient;
 
         private bool disposedValue = false;
@@ -19,23 +22,33 @@
 
         #region Constructors
 
-        public Client()
+        public Client() : this(Client.RestApiLive)
+        {
+        }
+
+        public Client(string apiUri)
         {
             httpClient = new HttpClient()
             {
-                BaseAddress = new Uri("https://api.gdax.com/"),
+                BaseAddress = new Uri(apiUri),
             };
 
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Bware");
 
+            this.Currencies = new Gdax.Currencies.Api(this);
             this.Products = new Gdax.Products.Api(this);
+            this.Time = new Gdax.Time.Api(this);
         }
 
         #endregion
 
         #region Properties
 
+        public Currencies.Api Currencies { get; private set; }
+
         public Products.Api Products { get; private set; }
+
+        public Time.Api Time { get; private set; }
 
         #endregion
 
