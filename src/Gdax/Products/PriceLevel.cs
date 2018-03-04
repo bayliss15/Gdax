@@ -8,8 +8,14 @@
     [DebuggerDisplay("Price: {Price}, Size: {Size}")]
     public class PriceLevel
     {
+        /// <summary>
+        /// Gets or sets the price.
+        /// </summary>
         public decimal Price { get; set; }
 
+        /// <summary>
+        /// Gets or sets the size.
+        /// </summary>
         public decimal Size { get; set; }      
     }
 
