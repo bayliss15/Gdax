@@ -1,26 +1,20 @@
-﻿namespace Gdax
+﻿// Copyright (c) Steve Bayliss. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+namespace Gdax
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
     using System.Net.Http;
-    using System.Threading.Tasks;
-    using Newtonsoft.Json;
-    using System.Globalization;
     using System.Security.Cryptography;
+    using System.Text;
+    using System.Threading.Tasks;
 
     public class AuthenticatedClient : Client
     {
-        #region Fields
-
         private string apiSecret;
 
-        #endregion
-
-        #region Constructors
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="Client"/> class.
+        /// Initializes a new instance of the <see cref="AuthenticatedClient"/> class.
         /// </summary>
         /// <param name="apiKey">The API key.</param>
         /// <param name="apiSecret">The API secret.</param>
@@ -30,7 +24,7 @@
         public AuthenticatedClient(string apiKey, string apiSecret, string apiPassphrase, string apiUri = Client.RestApiLive, string userAgent = "gdax")
             : base(apiUri, userAgent)
         {
-            // Validate our inputs        
+            // Validate our inputs
             if (string.IsNullOrWhiteSpace(apiKey)) { throw new ArgumentNullException(nameof(apiKey)); }
             if (string.IsNullOrWhiteSpace(apiSecret)) { throw new ArgumentNullException(nameof(apiSecret)); }
             if (string.IsNullOrWhiteSpace(apiPassphrase)) { throw new ArgumentNullException(nameof(apiPassphrase)); }
@@ -44,26 +38,30 @@
 
             // Create the API endpoints
             this.Accounts = new Accounts.Api(this);
+            this.Fills = new Fills.Api(this);
+            this.PaymentMethods = new PaymentMethods.Api(this);
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         /// Gets the accounts API.
         /// </summary>
         public Accounts.Api Accounts { get; private set; }
 
-        #endregion
+        /// <summary>
+        /// Gets the fills API.
+        /// </summary>
+        public Fills.Api Fills { get; private set; }
 
-        #region Methods
+        /// <summary>
+        /// Gets the payment methods API.
+        /// </summary>
+        public PaymentMethods.Api PaymentMethods { get; private set; }
 
         internal async override Task<T> GetAsync<T>(string uri)
         {
             var request = new HttpRequestMessage
             {
-                RequestUri = new Uri(httpClient.BaseAddress, uri),
+                RequestUri = new Uri(this.httpClient.BaseAddress, uri),
                 Method = HttpMethod.Get,
             };
 
@@ -82,7 +80,5 @@
 
             return await this.GetAsync<T>(request);
         }
-
-        #endregion
     }
 }

@@ -1,26 +1,26 @@
 ﻿// Copyright (c) Steve Bayliss. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-namespace Gdax.Time
+namespace Gdax.PaymentMethods
 {
     using System;
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Represents the current server time
+    /// Represents a FIAT account
     /// </summary>
-    public class ServerTime
+    public class FiatAccount
     {
         /// <summary>
-        /// Gets or sets the iso.
+        /// Gets or sets the identifier.
         /// </summary>
-        [JsonProperty("iso")]
-        public DateTime Iso { get; set; }
+        [JsonProperty("id")]
+        public Guid Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the epoch.
+        /// Gets or sets the resource.
         /// </summary>
-        [JsonProperty("epoch")]
-        public decimal Epoch { get; set; }
+        [JsonProperty("resource")]
+        public string Resource { get; set; }
     }
 }

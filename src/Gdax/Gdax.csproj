@@ -4,17 +4,32 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\Gdax.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netcoreapp2.0\Gdax.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <None Remove="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Fills\" />
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Deposits\" />
     <Folder Include="CoinbaseAccounts\" />
     <Folder Include="UserAccount\" />
     <Folder Include="Reports\" />
-    <Folder Include="PaymentMethods\" />
     <Folder Include="Withdrawals\" />
     <Folder Include="Orders\" />
   </ItemGroup>

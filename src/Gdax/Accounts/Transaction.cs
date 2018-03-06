@@ -1,8 +1,14 @@
-﻿namespace Gdax.Accounts
+﻿// Copyright (c) Steve Bayliss. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+namespace Gdax.Accounts
 {
     using System;
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// Represents a transcation for an account
+    /// </summary>
     public class Transaction
     {
         /// <summary>

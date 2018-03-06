@@ -1,8 +1,14 @@
-﻿namespace Gdax.Products
-{
-    using Newtonsoft.Json;
-    using System.Collections.Generic;
+﻿// Copyright (c) Steve Bayliss. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+namespace Gdax.Products
+{
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
+
+    /// <summary>
+    /// Represents the order book
+    /// </summary>
     public class Book
     {
         /// <summary>

@@ -1,26 +1,22 @@
-﻿namespace Gdax
+﻿// Copyright (c) Steve Bayliss. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+namespace Gdax
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
     using System.Net.Http;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
 
     public class Client : IDisposable
     {
-        #region Fields
-
         public const string RestApiLive = "https://api.gdax.com/";
+
         public const string RestApiSandbox = "https://api-public.sandbox.gdax.com/";
 
         protected HttpClient httpClient;
 
         private bool disposedValue = false;
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Client" /> class.
@@ -34,18 +30,14 @@
             if (string.IsNullOrWhiteSpace(userAgent)) { throw new ArgumentNullException(nameof(userAgent)); }
 
             // Create and setup our HTTP client
-            httpClient = new HttpClient() { BaseAddress = new Uri(apiUri) };
-            httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
+            this.httpClient = new HttpClient() { BaseAddress = new Uri(apiUri) };
+            this.httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
 
             // Create the API endpoints
             this.Currencies = new Currencies.Api(this);
             this.Products = new Products.Api(this);
             this.Time = new Time.Api(this);
         }
-
-        #endregion
-
-        #region API Properties
 
         /// <summary>
         /// Gets the currencies API.
@@ -62,19 +54,15 @@
         /// </summary>
         public Time.Api Time { get; private set; }
 
-        #endregion
-
-        #region Methods
-
         internal virtual async Task<T> GetAsync<T>(string uri)
         {
             var request = new HttpRequestMessage
             {
-                RequestUri = new Uri(httpClient.BaseAddress, uri),
+                RequestUri = new Uri(this.httpClient.BaseAddress, uri),
                 Method = HttpMethod.Get
             };
 
-            return await this.GetAsync<T>(request);            
+            return await this.GetAsync<T>(request);
         }
 
         internal async Task<T> GetAsync<T>(HttpRequestMessage request)
@@ -85,17 +73,26 @@
 
             if (response.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<T>(data);
+                var serializationSettings = new JsonSerializerSettings()
+                {
+                    MissingMemberHandling = MissingMemberHandling.Error
+                };
+
+                try
+                {
+                    return JsonConvert.DeserializeObject<T>(data, serializationSettings);
+                }
+                catch (Exception ex)
+                {
+                    var a = 1;
+                    throw;
+                }
             }
             else
             {
                 throw new InvalidOperationException(string.Format("{0}: {1}", response.StatusCode, data));
             }
         }
-
-        #endregion
-
-        #region IDisposable Implementation
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.
@@ -122,7 +119,5 @@
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             this.Dispose(true);
         }
-
-        #endregion
     }
 }

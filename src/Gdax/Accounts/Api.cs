@@ -1,4 +1,7 @@
-﻿namespace Gdax.Accounts
+﻿// Copyright (c) Steve Bayliss. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+namespace Gdax.Accounts
 {
     using System;
     using System.Collections.Generic;
@@ -16,25 +19,25 @@
         public async Task<IEnumerable<Account>> GetAccounts()
         {
             var requestUri = "accounts";
-            return await client.GetAsync<IEnumerable<Account>>(requestUri);
+            return await this.client.GetAsync<IEnumerable<Account>>(requestUri);
         }
 
         public async Task<Account> GetAccount(Guid accountId)
         {
             var requestUri = string.Format("accounts/{0}", accountId);
-            return await client.GetAsync<Account>(requestUri);
+            return await this.client.GetAsync<Account>(requestUri);
         }
 
         public async Task<IEnumerable<Transaction>> GetAccountHistory(Guid accountId)
         {
             var requestUri = string.Format("accounts/{0}/ledger", accountId);
-            return await client.GetAsync<IEnumerable<Transaction>>(requestUri);
+            return await this.client.GetAsync<IEnumerable<Transaction>>(requestUri);
         }
 
         public async Task<IEnumerable<Hold>> GetHolds(Guid accountId)
         {
             var requestUri = string.Format("accounts/{0}/holds", accountId);
-            return await client.GetAsync<IEnumerable<Hold>>(requestUri);
+            return await this.client.GetAsync<IEnumerable<Hold>>(requestUri);
         }
     }
 }

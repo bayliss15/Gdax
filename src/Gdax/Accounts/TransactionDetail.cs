@@ -1,8 +1,14 @@
-﻿namespace Gdax.Accounts
+﻿// Copyright (c) Steve Bayliss. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+namespace Gdax.Accounts
 {
     using System;
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// Represents the detail of a transaction on an account
+    /// </summary>
     public class TransactionDetail
     {
         // TODO: Sort this out so we get the specific classes deserialized
@@ -42,19 +48,19 @@
     ////{
     ////    [JsonProperty("transfer_id")]
     ////    public Guid? TransferId { get; set; }
-
+    ////
     ////    [JsonProperty("transfer_type")]
     ////    public string TransferType { get; set; }
     ////}
-
-    ////public class TradeTransactionDetail 
+    ////
+    ////public class TradeTransactionDetail
     ////{
     ////    [JsonProperty("order_id")]
     ////    public Guid? OrderId { get; set; }
-
+    ////
     ////    [JsonProperty("trade_id")]
     ////    public long? TradeId { get; set; }
-
+    ////
     ////    [JsonProperty("product_id")]
     ////    public string ProductId { get; set; }
     ////}

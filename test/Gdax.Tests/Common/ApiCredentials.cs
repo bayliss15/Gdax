@@ -1,9 +1,10 @@
-﻿namespace Gdax.Tests.Common
+﻿// Copyright (c) Steve Bayliss. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+namespace Gdax.Tests.Common
 {
-    using Microsoft.Extensions.Configuration;
     using System;
-    using System.Collections.Generic;
-    using System.Text;
+    using Microsoft.Extensions.Configuration;
 
     public class ApiCredentials
     {
@@ -20,14 +21,6 @@
             this.AccountId = new Guid(configuration["AccountId"]);
         }
 
-        public string ApiKey { get; private set; }
-
-        public string ApiPassphrase { get; private set; }
-
-        public string ApiSecret { get; private set; }
-
-        public Guid AccountId { get; private set; }
-
         public static ApiCredentials Instance
         {
             get
@@ -41,6 +34,12 @@
             }
         }
 
+        public string ApiKey { get; private set; }
 
+        public string ApiPassphrase { get; private set; }
+
+        public string ApiSecret { get; private set; }
+
+        public Guid AccountId { get; private set; }
     }
 }
