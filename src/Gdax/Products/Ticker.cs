@@ -6,6 +6,9 @@ namespace Gdax.Products
     using System;
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// Represents a ticker
+    /// </summary>
     public class Ticker
     {
         /// <summary>

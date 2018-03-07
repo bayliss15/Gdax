@@ -6,6 +6,9 @@ namespace Gdax.Products
     using System;
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// Represents a trade
+    /// </summary>
     public class Trade
     {
         /// <summary>

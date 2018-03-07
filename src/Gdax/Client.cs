@@ -8,13 +8,21 @@ namespace Gdax
     using System.Threading.Tasks;
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// A client to access the GDAX api
+    /// </summary>
+    /// <seealso cref="System.IDisposable" />
     public class Client : IDisposable
     {
+        /// <summary>
+        /// The rest API endpoint for live.
+        /// </summary>
         public const string RestApiLive = "https://api.gdax.com/";
 
+        /// <summary>
+        /// The rest API endpoint for the sandbox.
+        /// </summary>
         public const string RestApiSandbox = "https://api-public.sandbox.gdax.com/";
-
-        protected HttpClient httpClient;
 
         private bool disposedValue = false;
 
@@ -25,13 +33,13 @@ namespace Gdax
         /// <param name="userAgent">The user agent.</param>
         public Client(string apiUri = Client.RestApiLive, string userAgent = "gdax")
         {
-            // Validate our inputs
-            if (string.IsNullOrWhiteSpace(apiUri)) { throw new ArgumentNullException(nameof(apiUri)); }
-            if (string.IsNullOrWhiteSpace(userAgent)) { throw new ArgumentNullException(nameof(userAgent)); }
-
             // Create and setup our HTTP client
-            this.httpClient = new HttpClient() { BaseAddress = new Uri(apiUri) };
-            this.httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
+            this.HttpClient = new HttpClient()
+            {
+                BaseAddress = new Uri(apiUri ?? throw new ArgumentNullException(nameof(apiUri)))
+            };
+
+            this.HttpClient.DefaultRequestHeaders.Add("User-Agent", userAgent ?? throw new ArgumentNullException(nameof(userAgent)));
 
             // Create the API endpoints
             this.Currencies = new Currencies.Api(this);
@@ -54,20 +62,50 @@ namespace Gdax
         /// </summary>
         public Time.Api Time { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the HTTP client.
+        /// </summary>
+        protected HttpClient HttpClient { get; set; }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            this.Dispose(true);
+        }
+
+        /// <summary>
+        /// Gets a result from the GDAX API asynchronously.
+        /// </summary>
+        /// <typeparam name="T">Type to deserialize result to</typeparam>
+        /// <param name="uri">The URI.</param>
+        /// <returns>
+        /// A result as passed type
+        /// </returns>
         internal virtual async Task<T> GetAsync<T>(string uri)
         {
             var request = new HttpRequestMessage
             {
-                RequestUri = new Uri(this.httpClient.BaseAddress, uri),
+                RequestUri = new Uri(this.HttpClient.BaseAddress, uri),
                 Method = HttpMethod.Get
             };
 
             return await this.GetAsync<T>(request);
         }
 
+        /// <summary>
+        /// Gets a result from the GDAX API asynchronously.
+        /// </summary>
+        /// <typeparam name="T">Type to deserialize result to</typeparam>
+        /// <param name="request">The request.</param>
+        /// <returns>
+        /// A result as passed type
+        /// </returns>
         internal async Task<T> GetAsync<T>(HttpRequestMessage request)
         {
-            var response = await this.httpClient.SendAsync(request);
+            var response = await this.HttpClient.SendAsync(request);
 
             var data = await response.Content.ReadAsStringAsync();
 
@@ -84,7 +122,7 @@ namespace Gdax
                 }
                 catch (Exception ex)
                 {
-                    var a = 1;
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
                     throw;
                 }
             }
@@ -104,20 +142,14 @@ namespace Gdax
             {
                 if (disposing)
                 {
-                    if (this.httpClient != null) { this.httpClient.Dispose(); }
+                    if (this.HttpClient != null)
+                    {
+                        this.HttpClient.Dispose();
+                    }
                 }
 
                 this.disposedValue = true;
             }
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            this.Dispose(true);
         }
     }
 }

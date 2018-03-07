@@ -10,9 +10,15 @@ namespace Gdax.Fills
     /// </summary>
     public enum FillSide
     {
+        /// <summary>
+        /// A fill that is a buy
+        /// </summary>
         [EnumMember(Value = "buy")]
         Buy,
 
+        /// <summary>
+        /// A fill that is a sell
+        /// </summary>
         [EnumMember(Value = "sell")]
         Sell
     }

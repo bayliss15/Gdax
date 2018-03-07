@@ -10,9 +10,15 @@ namespace Gdax.Accounts
     /// </summary>
     public enum HoldType
     {
+        /// <summary>
+        /// A order hold
+        /// </summary>
         [EnumMember(Value = "order")]
         Order,
 
+        /// <summary>
+        /// A transfer hold
+        /// </summary>
         [EnumMember(Value = "transfer")]
         Transfer
     }

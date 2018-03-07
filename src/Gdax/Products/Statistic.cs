@@ -5,6 +5,9 @@ namespace Gdax.Products
 {
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// Represents a set of statistics
+    /// </summary>
     public class Statistic
     {
         /// <summary>

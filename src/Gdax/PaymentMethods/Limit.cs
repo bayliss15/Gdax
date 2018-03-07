@@ -3,7 +3,6 @@
 
 namespace Gdax.PaymentMethods
 {
-    using System;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -11,12 +10,21 @@ namespace Gdax.PaymentMethods
     /// </summary>
     public class Limit
     {
+        /// <summary>
+        /// Gets or sets the period in days.
+        /// </summary>
         [JsonProperty("period_in_days")]
         public int PeriodInDays { get; set; }
 
+        /// <summary>
+        /// Gets or sets the total.
+        /// </summary>
         [JsonProperty("total")]
         public Value Total { get; set; }
 
+        /// <summary>
+        /// Gets or sets the remaining.
+        /// </summary>
         [JsonProperty("remaining")]
         public Value Remaining { get; set; }
     }

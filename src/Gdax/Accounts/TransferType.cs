@@ -10,9 +10,15 @@ namespace Gdax.Accounts
     /// </summary>
     public enum TransferType
     {
+        /// <summary>
+        /// A deposit transfer
+        /// </summary>
         [EnumMember(Value = "deposit")]
         Deposit,
 
+        /// <summary>
+        /// A withdrawl transfer
+        /// </summary>
         [EnumMember(Value = "withdraw")]
         Withdraw
     }

@@ -6,6 +6,9 @@ namespace Gdax.Products
     using System.Diagnostics;
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// Represents a price level
+    /// </summary>
     [JsonConverter(typeof(PriceLevelConverter))]
     [DebuggerDisplay("Price: {Price}, Size: {Size}")]
     public class PriceLevel

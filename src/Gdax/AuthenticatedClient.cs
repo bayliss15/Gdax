@@ -9,6 +9,10 @@ namespace Gdax
     using System.Text;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// An authenticated client to access the GDAX api
+    /// </summary>
+    /// <seealso cref="Gdax.Client" />
     public class AuthenticatedClient : Client
     {
         private string apiSecret;
@@ -24,17 +28,12 @@ namespace Gdax
         public AuthenticatedClient(string apiKey, string apiSecret, string apiPassphrase, string apiUri = Client.RestApiLive, string userAgent = "gdax")
             : base(apiUri, userAgent)
         {
-            // Validate our inputs
-            if (string.IsNullOrWhiteSpace(apiKey)) { throw new ArgumentNullException(nameof(apiKey)); }
-            if (string.IsNullOrWhiteSpace(apiSecret)) { throw new ArgumentNullException(nameof(apiSecret)); }
-            if (string.IsNullOrWhiteSpace(apiPassphrase)) { throw new ArgumentNullException(nameof(apiPassphrase)); }
-
             // Add our credentially bits to our HTTP client
-            this.httpClient.DefaultRequestHeaders.Add("CB-ACCESS-KEY", apiKey);
-            this.httpClient.DefaultRequestHeaders.Add("CB-ACCESS-PASSPHRASE", apiPassphrase);
+            this.HttpClient.DefaultRequestHeaders.Add("CB-ACCESS-KEY", apiKey ?? throw new ArgumentNullException(nameof(apiKey)));
+            this.HttpClient.DefaultRequestHeaders.Add("CB-ACCESS-PASSPHRASE", apiPassphrase ?? throw new ArgumentNullException(nameof(apiPassphrase)));
 
             // Set our secret so we can use it later
-            this.apiSecret = apiSecret;
+            this.apiSecret = apiSecret ?? throw new ArgumentNullException(nameof(apiSecret));
 
             // Create the API endpoints
             this.Accounts = new Accounts.Api(this);
@@ -57,11 +56,19 @@ namespace Gdax
         /// </summary>
         public PaymentMethods.Api PaymentMethods { get; private set; }
 
+        /// <summary>
+        /// Gets a result from the GDAX API asynchronously.
+        /// </summary>
+        /// <typeparam name="T">Type to deserialize result to</typeparam>
+        /// <param name="uri">The URI.</param>
+        /// <returns>
+        /// A result as passed type
+        /// </returns>
         internal async override Task<T> GetAsync<T>(string uri)
         {
             var request = new HttpRequestMessage
             {
-                RequestUri = new Uri(this.httpClient.BaseAddress, uri),
+                RequestUri = new Uri(this.HttpClient.BaseAddress, uri),
                 Method = HttpMethod.Get,
             };
 

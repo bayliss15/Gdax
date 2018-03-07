@@ -7,6 +7,9 @@ namespace Gdax.Products
     using System.Diagnostics;
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// Represents a candle
+    /// </summary>
     [JsonConverter(typeof(CandleConverter))]
     [DebuggerDisplay("Time: {Time}, Low: {Low}, High: {High}, Open: {Open}, Close: {Close}, Volume: {Volume}")]
     public class Candle

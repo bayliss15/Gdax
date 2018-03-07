@@ -5,6 +5,9 @@ namespace Gdax.Products
 {
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// Represents product
+    /// </summary>
     public class Product
     {
         /// <summary>

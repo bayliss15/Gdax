@@ -10,15 +10,27 @@ namespace Gdax.Accounts
     /// </summary>
     public enum TransactionType
     {
+        /// <summary>
+        /// A transfer transaction
+        /// </summary>
         [EnumMember(Value = "transfer")]
         Transfer,
 
+        /// <summary>
+        /// A match transaction
+        /// </summary>
         [EnumMember(Value = "match")]
         Match,
 
+        /// <summary>
+        /// A rebate transaction
+        /// </summary>
         [EnumMember(Value = "fee")]
         Fee,
 
+        /// <summary>
+        /// A rebate transaction
+        /// </summary>
         [EnumMember(Value = "rebate")]
         Rebate
     }
