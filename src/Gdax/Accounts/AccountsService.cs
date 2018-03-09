@@ -10,15 +10,15 @@ namespace Gdax.Accounts
     /// <summary>
     /// Implements methods to access the Accounts API
     /// </summary>
-    public class Api
+    public class AccountsService
     {
         private Client client;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Api"/> class.
+        /// Initializes a new instance of the <see cref="AccountsService"/> class.
         /// </summary>
         /// <param name="client">The client.</param>
-        internal Api(Client client)
+        internal AccountsService(Client client)
         {
             this.client = client;
         }
@@ -31,12 +31,12 @@ namespace Gdax.Accounts
         /// </returns>
         public async Task<IEnumerable<Account>> GetAccounts()
         {
-            var requestUri = "accounts";
-            return await this.client.GetAsync<IEnumerable<Account>>(requestUri);
+            var request = this.client.CreateRequest("accounts");
+            return await this.client.GetResponseAsync<IEnumerable<Account>>(request);
         }
 
         /// <summary>
-        /// Information for a single account. Use this endpoint when you know the account id.
+        /// Gets an account matching the specified account identifer.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         /// <returns>
@@ -44,12 +44,13 @@ namespace Gdax.Accounts
         /// </returns>
         public async Task<Account> GetAccount(Guid accountId)
         {
-            var requestUri = string.Format("accounts/{0}", accountId);
-            return await this.client.GetAsync<Account>(requestUri);
+            var endpoint = string.Format("accounts/{0}", accountId);
+            var request = this.client.CreateRequest(endpoint);
+            return await this.client.GetResponseAsync<Account>(request);
         }
 
         /// <summary>
-        /// List account activity. Account activity either increases or decreases your account balance.
+        /// Gets the transaction history for an account matching the specified identifier.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         /// <returns>
@@ -57,14 +58,13 @@ namespace Gdax.Accounts
         /// </returns>
         public async Task<IEnumerable<Transaction>> GetAccountHistory(Guid accountId)
         {
-            var requestUri = string.Format("accounts/{0}/ledger", accountId);
-            return await this.client.GetAsync<IEnumerable<Transaction>>(requestUri);
+            var endpoint = string.Format("accounts/{0}/ledger", accountId);
+            var request = this.client.CreateRequest(endpoint);
+            return await this.client.GetResponseAsync<IEnumerable<Transaction>>(request);
         }
 
         /// <summary>
-        /// Holds are placed on an account for any active orders or pending withdraw requests.
-        /// As an order is filled, the hold amount is updated.
-        /// If an order is canceled, any remaining hold is removed. For a withdraw, once it is completed, the hold is removed.
+        /// Gets the holds for the account matching the specified identifer.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         /// <returns>
@@ -72,8 +72,9 @@ namespace Gdax.Accounts
         /// </returns>
         public async Task<IEnumerable<Hold>> GetHolds(Guid accountId)
         {
-            var requestUri = string.Format("accounts/{0}/holds", accountId);
-            return await this.client.GetAsync<IEnumerable<Hold>>(requestUri);
+            var endpoint = string.Format("accounts/{0}/holds", accountId);
+            var request = this.client.CreateRequest(endpoint);
+            return await this.client.GetResponseAsync<IEnumerable<Hold>>(request);
         }
     }
 }

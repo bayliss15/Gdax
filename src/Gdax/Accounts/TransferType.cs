@@ -20,6 +20,6 @@ namespace Gdax.Accounts
         /// A withdrawl transfer
         /// </summary>
         [EnumMember(Value = "withdraw")]
-        Withdraw
+        Withdraw,
     }
 }

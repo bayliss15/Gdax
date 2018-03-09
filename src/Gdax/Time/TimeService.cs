@@ -1,39 +1,37 @@
 ﻿// Copyright (c) Steve Bayliss. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-namespace Gdax.PaymentMethods
+namespace Gdax.Time
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Implements methods to access the Payment Methods API
+    /// Implements methods to access the Time API
     /// </summary>
-    public class Api
+    public class TimeService
     {
         private Client client;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Api"/> class.
+        /// Initializes a new instance of the <see cref="TimeService"/> class.
         /// </summary>
         /// <param name="client">The client.</param>
-        internal Api(Client client)
+        internal TimeService(Client client)
         {
             this.client = client;
         }
 
         /// <summary>
-        /// Get a list of your payment methods.
+        /// Get the API server time.
         /// </summary>
         /// <returns>
-        /// A list of payment methods
+        /// The server time
         /// </returns>
-        public async Task<IEnumerable<PaymentMethod>> GetPaymentMethods()
+        public async Task<ServerTime> GetTime()
         {
-            var requestUri = "payment-methods";
-
-            return await this.client.GetAsync<IEnumerable<PaymentMethod>>(requestUri);
+            var request = this.client.CreateRequest("time");
+            return await this.client.GetResponseAsync<ServerTime>(request);
         }
     }
 }

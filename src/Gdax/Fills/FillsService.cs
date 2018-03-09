@@ -10,15 +10,15 @@ namespace Gdax.Fills
     /// <summary>
     /// Implements methods to access the Fills API
     /// </summary>
-    public class Api
+    public class FillsService
     {
         private Client client;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Api"/> class.
+        /// Initializes a new instance of the <see cref="FillsService"/> class.
         /// </summary>
         /// <param name="client">The client.</param>
-        internal Api(Client client)
+        internal FillsService(Client client)
         {
             this.client = client;
         }
@@ -38,19 +38,8 @@ namespace Gdax.Fills
                 throw new ArgumentNullException("You cannot filter by orderId and productId");
             }
 
-            var requestUri = "fills";
-
-            if (orderId != null)
-            {
-                requestUri += string.Format("?orderId={0}", orderId);
-            }
-
-            if (!string.IsNullOrWhiteSpace(productId))
-            {
-                requestUri += string.Format("?productId={0}", orderId);
-            }
-
-            return await this.client.GetAsync<IEnumerable<Fill>>(requestUri);
+            var request = this.client.CreateRequest("fills", new (string, object)[] { ("orderId", orderId), ("productId", productId) });
+            return await this.client.GetResponseAsync<IEnumerable<Fill>>(request);
         }
     }
 }

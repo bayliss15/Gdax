@@ -20,6 +20,6 @@ namespace Gdax.Fills
         /// A fill that is a sell
         /// </summary>
         [EnumMember(Value = "sell")]
-        Sell
+        Sell,
     }
 }

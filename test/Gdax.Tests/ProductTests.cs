@@ -33,7 +33,7 @@ namespace Gdax.Tests
         {
             using (var client = new Gdax.Client(Client.RestApiSandbox))
             {
-                var result = client.Products.GetProductOrderBook("ETH-EUR", 1).Result;
+                var result = client.Products.GetProductOrderBook("ETH-EUR", Products.OrderBookLevel.One).Result;
                 Assert.NotNull(result);
             }
         }

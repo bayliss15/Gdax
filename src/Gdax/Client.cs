@@ -4,6 +4,8 @@
 namespace Gdax
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
@@ -24,6 +26,11 @@ namespace Gdax
         /// </summary>
         public const string RestApiSandbox = "https://api-public.sandbox.gdax.com/";
 
+        /// <summary>
+        /// A unix Epoch
+        /// </summary>
+        public static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
         private bool disposedValue = false;
 
         /// <summary>
@@ -36,31 +43,31 @@ namespace Gdax
             // Create and setup our HTTP client
             this.HttpClient = new HttpClient()
             {
-                BaseAddress = new Uri(apiUri ?? throw new ArgumentNullException(nameof(apiUri)))
+                BaseAddress = new Uri(apiUri ?? throw new ArgumentNullException(nameof(apiUri))),
             };
 
             this.HttpClient.DefaultRequestHeaders.Add("User-Agent", userAgent ?? throw new ArgumentNullException(nameof(userAgent)));
 
             // Create the API endpoints
-            this.Currencies = new Currencies.Api(this);
-            this.Products = new Products.Api(this);
-            this.Time = new Time.Api(this);
+            this.Currencies = new Currencies.CurrenciesService(this);
+            this.Products = new Products.ProductsService(this);
+            this.Time = new Time.TimeService(this);
         }
 
         /// <summary>
         /// Gets the currencies API.
         /// </summary>
-        public Currencies.Api Currencies { get; private set; }
+        public Currencies.CurrenciesService Currencies { get; private set; }
 
         /// <summary>
         /// Gets the products.
         /// </summary>
-        public Products.Api Products { get; private set; }
+        public Products.ProductsService Products { get; private set; }
 
         /// <summary>
         /// Gets the time API.
         /// </summary>
-        public Time.Api Time { get; private set; }
+        public Time.TimeService Time { get; private set; }
 
         /// <summary>
         /// Gets or sets the HTTP client.
@@ -77,22 +84,30 @@ namespace Gdax
         }
 
         /// <summary>
-        /// Gets a result from the GDAX API asynchronously.
+        /// Creates a request suitable for the GDAX API.
         /// </summary>
-        /// <typeparam name="T">Type to deserialize result to</typeparam>
-        /// <param name="uri">The URI.</param>
-        /// <returns>
-        /// A result as passed type
-        /// </returns>
-        internal virtual async Task<T> GetAsync<T>(string uri)
+        /// <param name="endpoint">The endpoint.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>A HttpRequestMessage</returns>
+        public virtual HttpRequestMessage CreateRequest(string endpoint, IEnumerable<(string, object)> parameters = null)
         {
+            if (parameters != null)
+            {
+                var validParameters = parameters.Where(p => p.Item2 != null);
+
+                if (validParameters.Any())
+                {
+                    endpoint += "?" + string.Join("&", validParameters.Select(p => string.Format("{0}={1}", p.Item1, p.Item2)));
+                }
+            }
+
             var request = new HttpRequestMessage
             {
-                RequestUri = new Uri(this.HttpClient.BaseAddress, uri),
-                Method = HttpMethod.Get
+                RequestUri = new Uri(this.HttpClient.BaseAddress, endpoint),
+                Method = HttpMethod.Get,
             };
 
-            return await this.GetAsync<T>(request);
+            return request;
         }
 
         /// <summary>
@@ -103,7 +118,7 @@ namespace Gdax
         /// <returns>
         /// A result as passed type
         /// </returns>
-        internal async Task<T> GetAsync<T>(HttpRequestMessage request)
+        public async Task<T> GetResponseAsync<T>(HttpRequestMessage request)
         {
             var response = await this.HttpClient.SendAsync(request);
 
@@ -113,7 +128,7 @@ namespace Gdax
             {
                 var serializationSettings = new JsonSerializerSettings()
                 {
-                    MissingMemberHandling = MissingMemberHandling.Error
+                    MissingMemberHandling = MissingMemberHandling.Error,
                 };
 
                 try

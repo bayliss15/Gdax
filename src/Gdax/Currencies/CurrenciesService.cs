@@ -1,37 +1,37 @@
 ﻿// Copyright (c) Steve Bayliss. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-namespace Gdax.Time
+namespace Gdax.Currencies
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Implements methods to access the Time API
+    /// Implements methods to access the Currencies API
     /// </summary>
-    public class Api
+    public class CurrenciesService
     {
         private Client client;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Api"/> class.
+        /// Initializes a new instance of the <see cref="CurrenciesService"/> class.
         /// </summary>
         /// <param name="client">The client.</param>
-        internal Api(Client client)
+        internal CurrenciesService(Client client)
         {
             this.client = client;
         }
 
         /// <summary>
-        /// Get the API server time.
+        /// Get a list of known currencies.
         /// </summary>
         /// <returns>
-        /// The server time
+        /// A list of currencies
         /// </returns>
-        public async Task<ServerTime> GetTime()
+        public async Task<IEnumerable<Currency>> GetCurrencies()
         {
-            var requestUri = "time";
-            return await this.client.GetAsync<ServerTime>(requestUri);
+            var request = this.client.CreateRequest("currencies");
+            return await this.client.GetResponseAsync<IEnumerable<Currency>>(request);
         }
     }
 }

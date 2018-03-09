@@ -22,16 +22,14 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta006" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Deposits\" />
-    <Folder Include="CoinbaseAccounts\" />
-    <Folder Include="UserAccount\" />
+    <Folder Include="Orders\" />
     <Folder Include="Reports\" />
     <Folder Include="Withdrawals\" />
-    <Folder Include="Orders\" />
   </ItemGroup>
 
 </Project>

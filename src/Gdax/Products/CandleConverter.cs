@@ -11,8 +11,6 @@ namespace Gdax.Products
     /// </summary>
     public class CandleConverter : JsonConverter<Candle>
     {
-        private static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
         /// <summary>
         /// Reads the JSON representation of the object.
         /// </summary>
@@ -37,7 +35,7 @@ namespace Gdax.Products
             {
                 if (time == null)
                 {
-                    time = Epoch.AddSeconds((long)reader.Value);
+                    time = Client.Epoch.AddSeconds((long)reader.Value);
                 }
                 else if (low == null)
                 {
@@ -69,7 +67,7 @@ namespace Gdax.Products
                         High = high.Value,
                         Open = open.Value,
                         Close = close.Value,
-                        Volume = volume.Value
+                        Volume = volume.Value,
                     };
                 }
             }

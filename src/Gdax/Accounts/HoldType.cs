@@ -20,6 +20,6 @@ namespace Gdax.Accounts
         /// A transfer hold
         /// </summary>
         [EnumMember(Value = "transfer")]
-        Transfer
+        Transfer,
     }
 }

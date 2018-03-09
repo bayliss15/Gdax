@@ -32,6 +32,6 @@ namespace Gdax.Accounts
         /// A rebate transaction
         /// </summary>
         [EnumMember(Value = "rebate")]
-        Rebate
+        Rebate,
     }
 }

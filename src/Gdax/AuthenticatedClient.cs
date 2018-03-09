@@ -4,10 +4,10 @@
 namespace Gdax
 {
     using System;
+    using System.Collections.Generic;
     using System.Net.Http;
     using System.Security.Cryptography;
     using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// An authenticated client to access the GDAX api
@@ -36,43 +36,45 @@ namespace Gdax
             this.apiSecret = apiSecret ?? throw new ArgumentNullException(nameof(apiSecret));
 
             // Create the API endpoints
-            this.Accounts = new Accounts.Api(this);
-            this.Fills = new Fills.Api(this);
-            this.PaymentMethods = new PaymentMethods.Api(this);
+            this.Accounts = new Accounts.AccountsService(this);
+            this.Fills = new Fills.FillsService(this);
+            this.PaymentMethods = new PaymentMethods.PaymentMethodsService(this);
+            this.UserAccount = new UserAccount.UserAccountService(this);
         }
 
         /// <summary>
         /// Gets the accounts API.
         /// </summary>
-        public Accounts.Api Accounts { get; private set; }
+        public Accounts.AccountsService Accounts { get; private set; }
 
         /// <summary>
         /// Gets the fills API.
         /// </summary>
-        public Fills.Api Fills { get; private set; }
+        public Fills.FillsService Fills { get; private set; }
 
         /// <summary>
         /// Gets the payment methods API.
         /// </summary>
-        public PaymentMethods.Api PaymentMethods { get; private set; }
+        public PaymentMethods.PaymentMethodsService PaymentMethods { get; private set; }
 
         /// <summary>
-        /// Gets a result from the GDAX API asynchronously.
+        /// Gets the user account.
         /// </summary>
-        /// <typeparam name="T">Type to deserialize result to</typeparam>
-        /// <param name="uri">The URI.</param>
-        /// <returns>
-        /// A result as passed type
-        /// </returns>
-        internal async override Task<T> GetAsync<T>(string uri)
-        {
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(this.HttpClient.BaseAddress, uri),
-                Method = HttpMethod.Get,
-            };
+        public UserAccount.UserAccountService UserAccount { get; private set; }
 
-            var timeStamp = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds.ToString("F0");
+        /// <summary>
+        /// Creates a request suitable for the GDAX API.
+        /// </summary>
+        /// <param name="endpoint">The endpoint.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>
+        /// A HttpRequestMessage
+        /// </returns>
+        public override HttpRequestMessage CreateRequest(string endpoint, IEnumerable<(string, object)> parameters = null)
+        {
+            var request = base.CreateRequest(endpoint, parameters);
+
+            var timeStamp = (DateTime.UtcNow - Client.Epoch).TotalSeconds.ToString("F0");
 
             var hashKey = Convert.FromBase64String(this.apiSecret);
             var hashData = string.Concat(timeStamp, "GET", request.RequestUri.PathAndQuery);
@@ -85,7 +87,7 @@ namespace Gdax
 
             request.Headers.Add("CB-ACCESS-TIMESTAMP", timeStamp);
 
-            return await this.GetAsync<T>(request);
+            return request;
         }
     }
 }
